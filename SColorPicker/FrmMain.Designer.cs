@@ -49,10 +49,13 @@ namespace SColorPicker
             this.panelSpanTop = new System.Windows.Forms.Panel();
             this.panelGroup = new System.Windows.Forms.Panel();
             this.gBColorWheel = new System.Windows.Forms.GroupBox();
+            this.panelTip = new System.Windows.Forms.Panel();
+            this.LabelTip = new System.Windows.Forms.Label();
             this.GroupingBox.SuspendLayout();
             this.GbColor.SuspendLayout();
             this.panel1.SuspendLayout();
             this.panelGroup.SuspendLayout();
+            this.panelTip.SuspendLayout();
             this.SuspendLayout();
             // 
             // timer
@@ -97,7 +100,7 @@ namespace SColorPicker
             this.TxtBScroll.TabIndex = 11;
             this.TxtBScroll.Text = "255";
             this.TxtBScroll.SelectedItemChanged += new System.EventHandler(this.TxtScoll_SelectedItemChanged);
-            this.TxtBScroll.KeyUp += new KeyEventHandler(this.TxtScroll_KeyUp);
+            this.TxtBScroll.KeyUp += new System.Windows.Forms.KeyEventHandler(this.TxtScroll_KeyUp);
             // 
             // TxtGScroll
             // 
@@ -107,7 +110,7 @@ namespace SColorPicker
             this.TxtGScroll.TabIndex = 10;
             this.TxtGScroll.Text = "255";
             this.TxtGScroll.SelectedItemChanged += new System.EventHandler(this.TxtScoll_SelectedItemChanged);
-            this.TxtGScroll.KeyUp += new KeyEventHandler(this.TxtScroll_KeyUp);
+            this.TxtGScroll.KeyUp += new System.Windows.Forms.KeyEventHandler(this.TxtScroll_KeyUp);
             // 
             // TxtRScoll
             // 
@@ -117,7 +120,7 @@ namespace SColorPicker
             this.TxtRScoll.TabIndex = 0;
             this.TxtRScoll.Text = "255";
             this.TxtRScoll.SelectedItemChanged += new System.EventHandler(this.TxtScoll_SelectedItemChanged);
-            this.TxtRScoll.KeyUp += new KeyEventHandler(this.TxtScroll_KeyUp);
+            this.TxtRScoll.KeyUp += new System.Windows.Forms.KeyEventHandler(this.TxtScroll_KeyUp);
             // 
             // label3
             // 
@@ -215,7 +218,7 @@ namespace SColorPicker
             this.panelGroup.Controls.Add(this.GbColor);
             this.panelGroup.Location = new System.Drawing.Point(0, 0);
             this.panelGroup.Name = "panelGroup";
-            this.panelGroup.Size = new System.Drawing.Size(399, 236);
+            this.panelGroup.Size = new System.Drawing.Size(404, 234);
             this.panelGroup.TabIndex = 7;
             // 
             // gBColorWheel
@@ -230,12 +233,36 @@ namespace SColorPicker
             this.gBColorWheel.MouseUp += new System.Windows.Forms.MouseEventHandler(this.FrmMain_MouseUp);
             this.gBColorWheel.Paint += new System.Windows.Forms.PaintEventHandler(this.gBColorWheel_Paint);
             // 
+            // panelTip
+            // 
+            this.panelTip.BackColor = System.Drawing.Color.Black;
+            this.panelTip.Controls.Add(this.LabelTip);
+            this.panelTip.Location = new System.Drawing.Point(96, 294);
+            this.panelTip.Name = "panelTip";
+            this.panelTip.Padding = new System.Windows.Forms.Padding(4);
+            this.panelTip.Size = new System.Drawing.Size(233, 37);
+            this.panelTip.TabIndex = 8;
+            // 
+            // LabelTip
+            // 
+            this.LabelTip.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
+            this.LabelTip.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.LabelTip.Font = new System.Drawing.Font("Expo M", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
+            this.LabelTip.Location = new System.Drawing.Point(4, 4);
+            this.LabelTip.Name = "LabelTip";
+            this.LabelTip.Size = new System.Drawing.Size(225, 29);
+            this.LabelTip.TabIndex = 0;
+            this.LabelTip.Text = "label4";
+            this.LabelTip.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.LabelTip.MouseEnter += new System.EventHandler(this.MouseEnter_Capture);
+            // 
             // FrmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.DarkGray;
-            this.ClientSize = new System.Drawing.Size(448, 279);
+            this.ClientSize = new System.Drawing.Size(651, 486);
+            this.Controls.Add(this.panelTip);
             this.Controls.Add(this.panelGroup);
             this.DoubleBuffered = true;
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
@@ -245,14 +272,13 @@ namespace SColorPicker
             this.Text = "Screen Color Picker";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FrmMain_Closing);
             this.Load += new System.EventHandler(this.FrmMain_Load);
-            //this.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.FrmMain_KeyPress);
-            //this.KeyUp += new System.Windows.Forms.KeyEventHandler(this.FrmMain_KeyUp);
             this.MouseUp += new System.Windows.Forms.MouseEventHandler(this.FrmMain_MouseUp);
             this.GroupingBox.ResumeLayout(false);
             this.GroupingBox.PerformLayout();
             this.GbColor.ResumeLayout(false);
             this.panel1.ResumeLayout(false);
             this.panelGroup.ResumeLayout(false);
+            this.panelTip.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -276,6 +302,8 @@ namespace SColorPicker
         private DomainUpDown TxtRScoll;
         private DomainUpDown TxtGScroll;
         private DomainUpDown TxtBScroll;
+        private Panel panelTip;
+        private Label LabelTip;
     }
 }
 

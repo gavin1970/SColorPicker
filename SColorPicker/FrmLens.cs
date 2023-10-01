@@ -7,11 +7,22 @@ using System.Windows.Forms;
 public class FrmLens : Form
 {
     public Color ColorPicked { get; set; } = Color.Transparent;
+    FrmMain formMain = new FrmMain();
     private readonly Timer timer;
     private Bitmap scrBmp;
     private Graphics scrGrp;
     private bool mouseDown;
 
+    private void InitializeComponent()
+    {
+        this.SuspendLayout();
+        // 
+        // FrmLens
+        // 
+        this.ClientSize = new System.Drawing.Size(120, 23);
+        this.Name = "FrmLens";
+        this.ResumeLayout(false);
+    }
     public FrmLens() : base()
     {
         SetStyle(
@@ -36,6 +47,24 @@ public class FrmLens : Form
     public bool AutoClose { get; set; } = true;
     public bool NearestNeighborInterpolation { get; set; }
 
+    private void CopyScreen()
+    {
+        if (scrBmp == null)
+        {
+            scrBmp = formMain.GetScreenCap(out Size _);
+            scrGrp = Graphics.FromImage(scrBmp);
+        }
+
+        scrGrp.CopyFromScreen(Point.Empty, Point.Empty, scrBmp.Size);
+    }
+    private void SetLocation()
+    {
+        var p = Cursor.Position;
+
+        Left = p.X - Width / 2;
+        Top = p.Y - Height / 2;
+    }
+
     protected override void OnMouseWheel(MouseEventArgs e)
     {
         if (e.Delta > 0 && ZoomFactor < 10)
@@ -43,7 +72,6 @@ public class FrmLens : Form
         else if (e.Delta < 0 && ZoomFactor > 1)
             ZoomFactor--;
     }
-
     protected override void OnShown(EventArgs e)
     {
         base.OnShown(e);
@@ -58,37 +86,31 @@ public class FrmLens : Form
         Capture = true;
         mouseDown = true;
     }
-
     protected override void OnMouseDown(MouseEventArgs e)
     {
         base.OnMouseDown(e);
         if (e.Button == MouseButtons.Right) 
             mouseDown = true;
         else if (e.Button == MouseButtons.Left)
-        {
-            FrmMain frm = new FrmMain();
-            ColorPicked = frm.GetColorAt(Cursor.Position.X, Cursor.Position.Y);
-        }
+            ColorPicked = formMain.GetColorAt(Cursor.Position.X, Cursor.Position.Y);
     }
-
     protected override void OnMouseMove(MouseEventArgs e)
     {
         base.OnMouseMove(e);
         Invalidate();
     }
-
     protected override void OnMouseUp(MouseEventArgs e)
     {
-        base.OnMouseUp(e);
         if (mouseDown)
         {
             mouseDown = false;
-            if (AutoClose) Dispose();
+            if (AutoClose) 
+                Dispose();
         }
         else
             this.Close();
+        base.OnMouseUp(e);
     }
-
     protected override void OnKeyUp(KeyEventArgs e)
     {
         Point loc = Cursor.Position;
@@ -109,10 +131,16 @@ public class FrmLens : Form
             Cursor.Position = new Point(loc.X, loc.Y + 1);
         }
 
-        base.OnKeyDown(e);
-        if (e.KeyCode == Keys.Escape) Dispose();
-    }
+        if (e.KeyCode == Keys.Escape || e.KeyCode == Keys.Enter)
+        {
+            if (e.KeyCode == Keys.Enter)
+                ColorPicked = formMain.GetColorAt(Cursor.Position.X, Cursor.Position.Y);
+            if (AutoClose) 
+                Dispose();
+        }
 
+        base.OnKeyDown(e);
+    }
     protected override void OnPaint(PaintEventArgs e)
     {
         if (mouseDown) SetLocation();
@@ -137,7 +165,6 @@ public class FrmLens : Form
         if (scrBmp != null)
             e.Graphics.DrawImage(scrBmp, 0, 0);
     }
-
     protected override void Dispose(bool disposing)
     {
         if (disposing)
@@ -147,38 +174,5 @@ public class FrmLens : Form
             scrGrp?.Dispose();
         }
         base.Dispose(disposing);
-    }
-
-    private void CopyScreen()
-    {
-        if (scrBmp == null)
-        {
-            FrmMain frm = new FrmMain();
-            scrBmp = frm.GetScreenCap(out Size _);
-            scrGrp = Graphics.FromImage(scrBmp);
-        }
-
-        scrGrp.CopyFromScreen(Point.Empty, Point.Empty, scrBmp.Size);
-    }
-
-    private void SetLocation()
-    {
-        var p = Cursor.Position;
-
-        Left = p.X - Width / 2;
-        Top = p.Y - Height / 2;
-    }
-
-    private void InitializeComponent()
-    {
-            this.SuspendLayout();
-            // 
-            // FrmLens
-            // 
-            this.ClientSize = new Size(179, 135);
-            this.Cursor = Cursors.Cross;
-            this.Name = "FrmLens";
-            this.ResumeLayout(false);
-
     }
 }

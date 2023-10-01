@@ -1,4 +1,5 @@
 ﻿using ColorPicker;
+using SColorPicker.utils;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -21,7 +22,6 @@ namespace SColorPicker
             {
                 RED = c.R; GREEN = c.G; BLUE = c.B;
             }
-
             public char GetPrime()
             {
                 char retVal = 'R';
@@ -30,7 +30,6 @@ namespace SColorPicker
                 if (BLUE > val) { retVal = 'B'; }
                 return retVal;
             }
-
             public Color[] GetUpperSpan(int span)
             {
                 Color[] retVal = new Color[span];
@@ -56,7 +55,6 @@ namespace SColorPicker
 
                 return retVal;
             }
-
             public Color[] GetLowerSpan(int span)
             {
                 Color[] retVal = new Color[span];
@@ -90,11 +88,11 @@ namespace SColorPicker
         List<Color> m_colors = new List<Color>();
         double m_wheelLightness = 0.5;
 
-        private FrmLens frmLens { get; set; } = null;
+        private PickerTip Tips { get; set; }
+        private FrmLens ZoomLens { get; set; } = null;
         private Point CursorPosition { get; set; }
         private Rectangle DefaultFormSetup { get; set; }
         private Size DefaultFormSize { get; set; } = new Size(220, 267);
-
 
         public FrmMain()
         {
@@ -103,10 +101,31 @@ namespace SColorPicker
             Rectangle screenRectangle = this.RectangleToScreen(this.ClientRectangle);
             int titleHeight = screenRectangle.Top - this.Top;
 
-            DefaultFormSize = new Size(this.panelGroup.Width, this.panelGroup.Height + titleHeight);
+            //only need padding during Design, because I can't click on panel without removing DOCK on the labelTip.
+            this.panelTip.Padding = new Padding(0);
+            //align tool tip
+            SetPanelTip(titleHeight);
+
+            DefaultFormSize = new Size(this.panelGroup.Width, this.panelGroup.Height + (titleHeight * 2));
             this.Size = DefaultFormSize;
         }
 
+        private void SetupTips()
+        {
+            Tips = new PickerTip(5000);
+            Tips.PickerTipEvent += (sender, e) =>
+            {
+                string msg = e.Tip;
+                if (InvokeRequired) 
+                {
+                    LabelTip.Invoke(new Action(() => {
+                        LabelTip.Text = msg;
+                    }));
+                }
+                else
+                    LabelTip.Text = msg;
+            };
+        }
         private void CenterTheApp()
         {
             int i = 0;
@@ -123,98 +142,36 @@ namespace SColorPicker
             this.Left = curWidth - (this.Width / 2);
             this.Top = (Screen.AllScreens[i].WorkingArea.Height / 2) - (this.Height / 2);
         }
-
-        private void gBColorWheel_Paint(object sender, PaintEventArgs e)
+        private void SelectColorClicked(object sender, EventArgs e)
         {
-            RectangleF wheelrect = WheelRectangle;
-            PointF center = Center(wheelrect);
+            CursorPosition = Cursor.Position;
+            LblXY.Text = $"X:{CursorPosition.X}\nY:{CursorPosition.Y}";
 
-            using (PathGradientBrush brush = new PathGradientBrush(m_path.ToArray(), WrapMode.Clamp))
-            {
-                brush.CenterPoint = center;
-                brush.CenterColor = Color.White;
-                brush.SurroundColors = m_colors.ToArray();
+            this.GbColor.BackColor = GetColorAt(CursorPosition.X, CursorPosition.Y);
 
-                e.Graphics.SmoothingMode = SmoothingMode.HighSpeed;
-                e.Graphics.FillPie(brush, Rect(wheelrect), 0, 360);
-            }
+            this.TxtRScoll.Text = this.GbColor.BackColor.R.ToString();
+            this.TxtGScroll.Text = this.GbColor.BackColor.G.ToString();
+            this.TxtBScroll.Text = this.GbColor.BackColor.B.ToString();
 
-            using (SolidBrush b = new SolidBrush(Color.Black))
-                e.Graphics.DrawEllipse(new Pen(b, BorderSize), wheelrect);
+            SetSpan();
         }
-
-        private void FrmMain_Load(object sender, EventArgs e)
+        private void SetPanelTip(int tipHeight)
         {
-            CenterTheApp();
-            CalcWheelPoints();
-            SetupScollText();
+            this.panelTip.Visible = false;
+            int w = this.BackgroundImage == null ? this.panelGroup.Width : this.panelGroup.Width - 8;
+
+            Point loc = new Point(this.panelGroup.Left,
+                                    this.panelGroup.Top + (this.panelGroup.Height - 5));
+            Size sz = new Size(w, tipHeight);
+
+            this.panelTip.Location = loc;
+            this.panelTip.Size = sz;
+
+            this.panelTip.Visible = true;
         }
-
-        private void FrmMain_Closing(object sender, FormClosingEventArgs e)
-        {
-            if (timer.Enabled)
-                StopFindColor();
-        }
-
-        private void FrmMain_MouseUp(object sender, MouseEventArgs e)
-        {
-            if (e.Button == MouseButtons.Left)
-                StopFindColor();
-            else
-            {
-                if (frmLens == null || !frmLens.Visible)
-                {
-                    frmLens = new FrmLens()
-                    {
-                        Size = new Size(150, 150),
-                        AutoClose = true,
-                        ZoomFactor = 2,
-                        NearestNeighborInterpolation = false
-                    };
-                    frmLens.ShowDialog(this);
-                    if(frmLens != null && frmLens.ColorPicked != Color.Transparent)
-                    {
-                        StopFindColor();
-                        this.GbColor.BackColor = frmLens.ColorPicked;
-                        frmLens?.Dispose();
-
-                        this.TxtRScoll.Text = this.GbColor.BackColor.R.ToString();
-                        this.TxtGScroll.Text = this.GbColor.BackColor.G.ToString();
-                        this.TxtBScroll.Text = this.GbColor.BackColor.B.ToString();
-
-                        SetSpan();
-                    }
-                }
-                else
-                {
-                    frmLens.Close();
-                    frmLens.Dispose();
-                }
-            }
-        }
-
-        private void TxtScroll_KeyUp(object sender, KeyEventArgs e)
-        {
-            if (e.KeyCode == Keys.Escape)
-            {
-                StopFindColor();
-                return;
-            }
-        }
-
-        private void MouseEnter_Capture(object sender, EventArgs e)
-        {
-            if (this.Size.Width > DefaultFormSize.Width)
-            {
-                this.panelGroup.Visible = false;
-                this.panelGroup.Top = this.panelGroup.Top == 0 ? this.Height - this.panelGroup.Height : 0;
-                this.panelGroup.Visible = true;
-            }
-        }
-
         private void StopFindColor()
         {
-            timer.Enabled = false;
+            this.timer.Enabled = false;
             if (this.FormBorderStyle != FormBorderStyle.FixedToolWindow)
             {
                 this.Hide();
@@ -233,32 +190,11 @@ namespace SColorPicker
                 this.BtnCopy.Visible = true;
             }
         }
-
-        private void Timer_Tick(object sender, EventArgs e)
-        {
-            SelectColorClicked(sender, e);
-        }
-
-        private void SelectColorClicked(object sender, EventArgs e)
-        {
-            CursorPosition = Cursor.Position;
-            LblXY.Text = $"X:{CursorPosition.X}\nY:{CursorPosition.Y}";
-
-            this.GbColor.BackColor = GetColorAt(CursorPosition.X, CursorPosition.Y);
-
-            this.TxtRScoll.Text = this.GbColor.BackColor.R.ToString();
-            this.TxtGScroll.Text = this.GbColor.BackColor.G.ToString();
-            this.TxtBScroll.Text = this.GbColor.BackColor.B.ToString();
-
-            SetSpan();
-        }
-
         private void SetSpan()
         {
             this.GbColor.Text = $"{GetFormatColor()}".Replace("Color [A=255, ", "").Replace("]", "");
             SetColorSpan(new ColorSpan(this.GbColor.BackColor));
         }
-
         private void SetColorSpan(ColorSpan org)
         {
             if (org == null)
@@ -293,74 +229,6 @@ namespace SColorPicker
                     bExists[0].BackColor = cl[i];
             }
         }
-
-        private void BtnPick_Click(object sender, EventArgs e)
-        {
-            this.BtnCopy.BackColor = SystemColors.Control;
-            this.BtnCopy.ForeColor = Color.Black;
-            this.BtnPick.Enabled = false;
-            this.BtnCopy.Visible = false;
-            this.DefaultFormSetup = new Rectangle(this.Location, this.Size);
-            this.FormBorderStyle = FormBorderStyle.None;
-
-            this.Hide();
-            this.BackgroundImage = GetScreenCap(out Size sz);
-            this.Location = new Point(0, 0);
-            this.Size = sz;
-            this.Show();
-            this.Cursor = Cursors.Cross;
-            timer.Enabled = true;
-            this.BringToFront();
-            this.Focus();
-            this.TxtRScoll.Focus();
-        }
-
-        public Bitmap GetScreenCap(out Size sz)
-        {
-            sz = this.Size;
-
-            foreach (Screen scr in Screen.AllScreens)
-            {
-                if(scr.Bounds.Height> sz.Height)
-                    sz.Height = scr.Bounds.Height;
-
-                sz.Width += scr.Bounds.Width;
-            }
-
-            Bitmap bmp = new Bitmap(sz.Width, sz.Height);
-            Rectangle bounds = new Rectangle(0, 0, sz.Width, sz.Height);
-
-            using (Graphics g = Graphics.FromImage(bmp))
-                g.CopyFromScreen(bounds.Location, Point.Empty, bounds.Size);
-
-            return bmp;
-        }
-
-        public Color GetColorAt(int x, int y)
-        {
-            Bitmap bmp = new Bitmap(1, 1);
-            Rectangle bounds = new Rectangle(x, y, 1, 1);
-            using (Graphics g = Graphics.FromImage(bmp))
-                g.CopyFromScreen(bounds.Location, Point.Empty, bounds.Size);
-
-            return bmp.GetPixel(0, 0);
-        }
-
-        private void BtnCopy_Click(object sender, EventArgs e)
-        {
-            this.BtnCopy.BackColor = Color.Green;
-            this.BtnCopy.ForeColor = Color.White;
-            Clipboard.Clear();
-
-            Color color = GetFormatColor();
-            this.TxtRScoll.Focus();
-
-            if (color.IsEmpty)
-                return;
-
-            Clipboard.SetText($"{color}");
-        }
-
         private Color GetFormatColor()
         {
             if (!int.TryParse(this.TxtRScoll.Text.ToString(), out int r))
@@ -386,7 +254,6 @@ namespace SColorPicker
 
             return Color.FromArgb((int)((byte)(r)), (int)((byte)(g)), (int)((byte)(b)));
         }
-
         private void SetupScollText()
         {
             for(int i=255; i>=0; i--)
@@ -400,7 +267,6 @@ namespace SColorPicker
             this.TxtGScroll.SelectedIndex = 0;
             this.TxtBScroll.SelectedIndex = 0;
         }
-
         private void CalcWheelPoints()
         {
             m_path.Clear();
@@ -421,7 +287,6 @@ namespace SColorPicker
                 angle += step;
             }
         }
-
         private Rectangle CwClientRectangle
         {
             get
@@ -440,7 +305,6 @@ namespace SColorPicker
                 return r;
             }
         }
-
         RectangleF WheelRectangle
         {
             get
@@ -451,7 +315,6 @@ namespace SColorPicker
                 return r;
             }
         }
-
         RectangleF ColorWheelRectangle
         {
             get
@@ -461,12 +324,10 @@ namespace SColorPicker
                 return r;
             }
         }
-
         private float Radius(RectangleF r)
         {
             return Math.Min((r.Width / 2), (r.Height / 2));
         }
-
         private Rectangle Rect(RectangleF rf)
         {
             Rectangle r = new Rectangle();
@@ -476,7 +337,6 @@ namespace SColorPicker
             r.Height = (int)rf.Height;
             return r;
         }
-
         private PointF Center(RectangleF r)
         {
             PointF center = r.Location;
@@ -484,13 +344,6 @@ namespace SColorPicker
             center.Y += r.Height / 2;
             return center;
         }
-
-        private void TxtScoll_SelectedItemChanged(object sender, EventArgs e)
-        {
-            DomainUpDown domainUpDown = (DomainUpDown)sender;
-            SetTxtScrollTextColor(domainUpDown);
-        }
-
         private void SetTxtScrollTextColor(DomainUpDown dUpDown)
         {
             if(string.IsNullOrWhiteSpace(dUpDown.Text))
@@ -525,6 +378,173 @@ namespace SColorPicker
             
             this.GbColor.BackColor = Color.FromArgb(cR, cG, cB);
             SetSpan();
+        }
+
+        private void gBColorWheel_Paint(object sender, PaintEventArgs e)
+        {
+            RectangleF wheelrect = WheelRectangle;
+            PointF center = Center(wheelrect);
+
+            using (PathGradientBrush brush = new PathGradientBrush(m_path.ToArray(), WrapMode.Clamp))
+            {
+                brush.CenterPoint = center;
+                brush.CenterColor = Color.White;
+                brush.SurroundColors = m_colors.ToArray();
+
+                e.Graphics.SmoothingMode = SmoothingMode.HighSpeed;
+                e.Graphics.FillPie(brush, Rect(wheelrect), 0, 360);
+            }
+
+            using (SolidBrush b = new SolidBrush(Color.Black))
+                e.Graphics.DrawEllipse(new Pen(b, BorderSize), wheelrect);
+        }
+        private void FrmMain_Load(object sender, EventArgs e)
+        {
+            CenterTheApp();
+            CalcWheelPoints();
+            SetupScollText();
+            SetupTips();
+        }
+        private void FrmMain_Closing(object sender, FormClosingEventArgs e)
+        {
+            Tips.Dispose();
+            if (timer.Enabled)
+                StopFindColor();
+        }
+        private void FrmMain_MouseUp(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Left)
+                StopFindColor();
+            else
+            {
+                if (ZoomLens == null || !ZoomLens.Visible)
+                {
+                    ZoomLens = new FrmLens()
+                    {
+                        Size = new Size(150, 150),
+                        AutoClose = true,
+                        ZoomFactor = 2,
+                        NearestNeighborInterpolation = false
+                    };
+                    ZoomLens.ShowDialog(this);
+                    if (ZoomLens != null && ZoomLens.ColorPicked != Color.Transparent)
+                    {
+                        StopFindColor();
+                        this.GbColor.BackColor = ZoomLens.ColorPicked;
+                        ZoomLens?.Dispose();
+
+                        this.TxtRScoll.Text = this.GbColor.BackColor.R.ToString();
+                        this.TxtGScroll.Text = this.GbColor.BackColor.G.ToString();
+                        this.TxtBScroll.Text = this.GbColor.BackColor.B.ToString();
+
+                        SetSpan();
+                    }
+                }
+                else
+                {
+                    ZoomLens.Close();
+                    ZoomLens.Dispose();
+                }
+            }
+        }
+        private void TxtScroll_KeyUp(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Escape || e.KeyCode == Keys.Enter)
+            {
+                StopFindColor();
+                return;
+            }
+        }
+        private void MouseEnter_Capture(object sender, EventArgs e)
+        {
+            if (this.Size.Width > DefaultFormSize.Width)
+            {
+                int tipHeight = this.panelTip.Height;
+                this.panelGroup.Visible = false;
+
+                this.panelGroup.Top = this.panelGroup.Top == 0 ? this.Height - this.panelGroup.Height - tipHeight : 0;
+
+                SetPanelTip(tipHeight);
+
+                this.panelTip.Visible = true;
+                this.panelGroup.Visible = true;
+            }
+        }
+        private void Timer_Tick(object sender, EventArgs e)
+        {
+            SelectColorClicked(sender, e);
+        }
+        private void BtnPick_Click(object sender, EventArgs e)
+        {
+            this.BtnCopy.BackColor = SystemColors.Control;
+            this.BtnCopy.ForeColor = Color.Black;
+            this.BtnPick.Enabled = false;
+            this.BtnCopy.Visible = false;
+            this.DefaultFormSetup = new Rectangle(this.Location, this.ClientSize);
+            this.FormBorderStyle = FormBorderStyle.None;
+
+            this.Hide();
+            this.BackgroundImage = GetScreenCap(out Size sz);
+            this.Location = new Point(0, 0);
+            this.Size = sz;
+            
+            this.SetPanelTip(this.panelTip.Height);
+
+            this.Show();
+            this.Cursor = Cursors.Cross;
+            this.timer.Enabled = true;
+            this.BringToFront();
+            this.Focus();
+            this.TxtRScoll.Focus();
+        }
+        private void BtnCopy_Click(object sender, EventArgs e)
+        {
+            this.BtnCopy.BackColor = Color.Green;
+            this.BtnCopy.ForeColor = Color.White;
+            Clipboard.Clear();
+
+            Color color = GetFormatColor();
+            this.TxtRScoll.Focus();
+
+            if (color.IsEmpty)
+                return;
+
+            Clipboard.SetText($"{color}");
+        }
+        private void TxtScoll_SelectedItemChanged(object sender, EventArgs e)
+        {
+            DomainUpDown domainUpDown = (DomainUpDown)sender;
+            SetTxtScrollTextColor(domainUpDown);
+        }
+
+        public Bitmap GetScreenCap(out Size sz)
+        {
+            sz = this.Size;
+
+            foreach (Screen scr in Screen.AllScreens)
+            {
+                if (scr.Bounds.Height > sz.Height)
+                    sz.Height = scr.Bounds.Height;
+
+                sz.Width += scr.Bounds.Width;
+            }
+
+            Bitmap bmp = new Bitmap(sz.Width, sz.Height);
+            Rectangle bounds = new Rectangle(0, 0, sz.Width, sz.Height);
+
+            using (Graphics g = Graphics.FromImage(bmp))
+                g.CopyFromScreen(bounds.Location, Point.Empty, bounds.Size);
+
+            return bmp;
+        }
+        public Color GetColorAt(int x, int y)
+        {
+            Bitmap bmp = new Bitmap(1, 1);
+            Rectangle bounds = new Rectangle(x, y, 1, 1);
+            using (Graphics g = Graphics.FromImage(bmp))
+                g.CopyFromScreen(bounds.Location, Point.Empty, bounds.Size);
+
+            return bmp.GetPixel(0, 0);
         }
     }
 }

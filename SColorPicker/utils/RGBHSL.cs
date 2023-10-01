@@ -1,4 +1,6 @@
-﻿/* This tool is part of the xRay Toolkit and is provided free of charge by Bob Powell.
+﻿using System.Drawing;
+
+/* This tool is part of the xRay Toolkit and is provided free of charge by Bob Powell.
  * This code is not guaranteed to be free from defects or fit for merchantability in any way.
  * By using this tool in your own programs you agree to hold Robert W. Powell free from all
  * damages direct or incidental that arise from such use.
@@ -6,8 +8,6 @@
  * following paragraph (enclosed in quotes below) in your applications help or about dialog.
  * "Portions of this code provided by Bob Powell. http://www.bobpowell.net"
  */
-
-using System.Drawing;
 
 namespace xRay.Toolkit.Utilities
 {
