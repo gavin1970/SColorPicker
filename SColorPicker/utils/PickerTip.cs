@@ -9,14 +9,14 @@ namespace SColorPicker.utils
     {
         protected const int EVENT_SHUTDOWN = 0;
         protected const int EVENT_TIMEOUT = 258;
-        const int defaultWaitCount = 20;
-        const int waitStopThread = 5000;
+        const int m_defaultWaitCount = 20;
+        const int m_waitStopThread = 5000;
 
-        ManualResetEvent shutDownEvent;                               //could be shut down event or new message event
-        private List<string> pickerTips = new List<string>();
-        private int tipID = 0;
-        private Thread tipThread;
-        private bool disposedValue;
+        ManualResetEvent m_shutDownEvent;                               //could be shut down event or new message event
+        private List<string> m_pickerTips = new List<string>();
+        private int m_tipId = 0;
+        private Thread m_tipThread;
+        private bool m_disposedValue;
 
         public delegate void PickerTipEventHandler(object sender, PickerTipEventArgs e);
         public event PickerTipEventHandler PickerTipEvent;
@@ -24,13 +24,13 @@ namespace SColorPicker.utils
         internal PickerTip(int msTipTimer)
         {
             LoadTips();
-            shutDownEvent = new ManualResetEvent(false);
+            m_shutDownEvent = new ManualResetEvent(false);
 
-            tipThread = new Thread(() => {
+            m_tipThread = new Thread(() => {
                 ShowTips(msTipTimer);
                 return;
             });
-            tipThread.Start();
+            m_tipThread.Start();
         }
         ~PickerTip()
         {
@@ -48,42 +48,42 @@ namespace SColorPicker.utils
         }
         protected virtual void Dispose(bool disposing)
         {
-            if (!disposedValue)
+            if (!m_disposedValue)
             {
                 if (disposing)
                 {
-                    if (!StopThread(waitStopThread))
-                        tipThread.Abort();
+                    if (!StopThread(m_waitStopThread))
+                        m_tipThread.Abort();
                 }
-                disposedValue = true;
+                m_disposedValue = true;
             }
         }
         private bool StopThread(int msToWait)
         {
             //fires event to stop thread.
-            shutDownEvent?.Set();
+            m_shutDownEvent?.Set();
             //stay out of infinite loop
             DateTime dateTime = DateTime.UtcNow.AddMilliseconds(msToWait);
 
-            while (tipThread != null && tipThread.IsAlive && DateTime.UtcNow < dateTime)
+            while (m_tipThread != null && m_tipThread.IsAlive && DateTime.UtcNow < dateTime)
                 Thread.Sleep(10);
 
-            return tipThread == null || !tipThread.IsAlive;
+            return m_tipThread == null || !m_tipThread.IsAlive;
         }
         private void LoadTips()
         {
-            pickerTips.Add("Pick Color, Use R-Click and Scroll to Zoom.");
-            pickerTips.Add("While Zoom, Escape or R-Click exits Zoom.");
-            pickerTips.Add("Pick Color, Enter or L-Click selects crosshair Color.");
-            pickerTips.Add("While Zoom, ArrowKeys will move Cursor 1px.");
+            m_pickerTips.Add("Pick Color, Use R-Click and Scroll to Zoom.");
+            m_pickerTips.Add("While Zoom, Escape or R-Click exits Zoom.");
+            m_pickerTips.Add("Pick Color, Enter or L-Click selects crosshair Color.");
+            m_pickerTips.Add("While Zoom, ArrowKeys will move Cursor 1px.");
         }
         private void ShowTips(int msTipTimer)
         {
-            int timer, waitCount = defaultWaitCount;
+            int timer, waitCount = m_defaultWaitCount;
 
             do
             {
-                string tip = pickerTips[tipID];
+                string tip = m_pickerTips[m_tipId];
 
                 if (PickerTipEvent == null && waitCount > 0)
                 {
@@ -92,21 +92,21 @@ namespace SColorPicker.utils
                 }
                 else
                 {
-                    waitCount = defaultWaitCount;
+                    waitCount = m_defaultWaitCount;
                     timer = msTipTimer;
 
                     PickerTipEvent?.Invoke(this, new PickerTipEventArgs
                     {
-                        TipId = tipID,
+                        TipId = m_tipId,
                         Tip = tip
                     });
 
-                    tipID = tipID == pickerTips.Count - 1 ? 0 : tipID = tipID + 1;
+                    m_tipId = m_tipId == m_pickerTips.Count - 1 ? 0 : m_tipId = m_tipId + 1;
                 }
-            } while (!shutDownEvent.WaitOne(timer));
+            } while (!m_shutDownEvent.WaitOne(timer));
         }
     }
-    public class PickerTipEventArgs : EventArgs
+    internal class PickerTipEventArgs : EventArgs
     {
         public int TipId { get; set; }
         public string Tip { get; set; }

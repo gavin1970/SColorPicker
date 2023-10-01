@@ -13,7 +13,7 @@ namespace SColorPicker
     {
         private class ColorSpan
         {
-            const int _spanDiff = 5;
+            const int m_spanDiff = 5;
             private int RED { get; } = -1;
             private int GREEN { get; } = -1;
             private int BLUE { get; } = -1;
@@ -38,7 +38,7 @@ namespace SColorPicker
                 int r = RED;
                 int g = GREEN;
                 int b = BLUE;
-                int spanDiff = (int)((double)span * _spanDiff);
+                int spanDiff = (int)((double)span * m_spanDiff);
                 int halfSpan = (int)(spanDiff / 2);
 
                 for (int i = 0; i < span; i++)
@@ -63,7 +63,7 @@ namespace SColorPicker
                 int r = RED;
                 int g = GREEN;
                 int b = BLUE;
-                int spanDiff = (int)((double)span * _spanDiff);
+                int spanDiff = (int)((double)span * m_spanDiff);
                 int halfSpan = (int)(spanDiff / 2);
 
                 for (int i = 0; i < span; i++)
@@ -83,10 +83,11 @@ namespace SColorPicker
             }
         }
 
-        const int BorderSize = 2;
+        const int m_tipRotationWait = 10000;
+        const int m_borderSize = 2;
+        const double m_wheelLightness = 0.5;
         List<PointF> m_path = new List<PointF>();
         List<Color> m_colors = new List<Color>();
-        double m_wheelLightness = 0.5;
 
         private PickerTip Tips { get; set; }
         private FrmLens ZoomLens { get; set; } = null;
@@ -112,7 +113,7 @@ namespace SColorPicker
 
         private void SetupTips()
         {
-            Tips = new PickerTip(5000);
+            Tips = new PickerTip(m_tipRotationWait);
             Tips.PickerTipEvent += (sender, e) =>
             {
                 string msg = e.Tip;
@@ -396,7 +397,7 @@ namespace SColorPicker
             }
 
             using (SolidBrush b = new SolidBrush(Color.Black))
-                e.Graphics.DrawEllipse(new Pen(b, BorderSize), wheelrect);
+                e.Graphics.DrawEllipse(new Pen(b, m_borderSize), wheelrect);
         }
         private void FrmMain_Load(object sender, EventArgs e)
         {
