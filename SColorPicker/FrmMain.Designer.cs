@@ -51,6 +51,7 @@ namespace SColorPicker
             this.gBColorWheel = new System.Windows.Forms.GroupBox();
             this.panelTip = new System.Windows.Forms.Panel();
             this.LabelTip = new System.Windows.Forms.Label();
+            this.TxtHex = new System.Windows.Forms.TextBox();
             this.GroupingBox.SuspendLayout();
             this.GbColor.SuspendLayout();
             this.panel1.SuspendLayout();
@@ -75,6 +76,7 @@ namespace SColorPicker
             // GroupingBox
             // 
             this.GroupingBox.BackColor = System.Drawing.SystemColors.Control;
+            this.GroupingBox.Controls.Add(this.TxtHex);
             this.GroupingBox.Controls.Add(this.TxtBScroll);
             this.GroupingBox.Controls.Add(this.TxtGScroll);
             this.GroupingBox.Controls.Add(this.TxtRScoll);
@@ -86,7 +88,7 @@ namespace SColorPicker
             this.GroupingBox.Controls.Add(this.BtnPick);
             this.GroupingBox.Location = new System.Drawing.Point(0, 0);
             this.GroupingBox.Name = "GroupingBox";
-            this.GroupingBox.Size = new System.Drawing.Size(200, 110);
+            this.GroupingBox.Size = new System.Drawing.Size(200, 117);
             this.GroupingBox.TabIndex = 5;
             this.GroupingBox.TabStop = false;
             this.GroupingBox.Text = "[ Pick Color ]";
@@ -94,7 +96,7 @@ namespace SColorPicker
             // 
             // TxtBScroll
             // 
-            this.TxtBScroll.Location = new System.Drawing.Point(138, 67);
+            this.TxtBScroll.Location = new System.Drawing.Point(138, 61);
             this.TxtBScroll.Name = "TxtBScroll";
             this.TxtBScroll.Size = new System.Drawing.Size(48, 20);
             this.TxtBScroll.TabIndex = 11;
@@ -104,7 +106,7 @@ namespace SColorPicker
             // 
             // TxtGScroll
             // 
-            this.TxtGScroll.Location = new System.Drawing.Point(138, 44);
+            this.TxtGScroll.Location = new System.Drawing.Point(138, 38);
             this.TxtGScroll.Name = "TxtGScroll";
             this.TxtGScroll.Size = new System.Drawing.Size(48, 20);
             this.TxtGScroll.TabIndex = 10;
@@ -114,7 +116,7 @@ namespace SColorPicker
             // 
             // TxtRScoll
             // 
-            this.TxtRScoll.Location = new System.Drawing.Point(138, 21);
+            this.TxtRScoll.Location = new System.Drawing.Point(138, 15);
             this.TxtRScoll.Name = "TxtRScoll";
             this.TxtRScoll.Size = new System.Drawing.Size(48, 20);
             this.TxtRScoll.TabIndex = 0;
@@ -125,7 +127,7 @@ namespace SColorPicker
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(101, 70);
+            this.label3.Location = new System.Drawing.Point(101, 64);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(31, 13);
             this.label3.TabIndex = 9;
@@ -134,7 +136,7 @@ namespace SColorPicker
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(93, 47);
+            this.label2.Location = new System.Drawing.Point(93, 41);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(39, 13);
             this.label2.TabIndex = 8;
@@ -143,7 +145,7 @@ namespace SColorPicker
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(102, 24);
+            this.label1.Location = new System.Drawing.Point(102, 18);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(30, 13);
             this.label1.TabIndex = 7;
@@ -151,13 +153,12 @@ namespace SColorPicker
             // 
             // BtnCopy
             // 
-            this.BtnCopy.Location = new System.Drawing.Point(6, 81);
+            this.BtnCopy.Location = new System.Drawing.Point(6, 86);
             this.BtnCopy.Name = "BtnCopy";
             this.BtnCopy.Size = new System.Drawing.Size(56, 23);
             this.BtnCopy.TabIndex = 6;
             this.BtnCopy.Text = "&Copy";
             this.BtnCopy.UseVisualStyleBackColor = true;
-            this.BtnCopy.Visible = false;
             this.BtnCopy.Click += new System.EventHandler(this.BtnCopy_Click);
             // 
             // LblXY
@@ -173,7 +174,7 @@ namespace SColorPicker
             // 
             this.GbColor.BackColor = System.Drawing.SystemColors.Control;
             this.GbColor.Controls.Add(this.panel1);
-            this.GbColor.Location = new System.Drawing.Point(0, 116);
+            this.GbColor.Location = new System.Drawing.Point(0, 123);
             this.GbColor.Name = "GbColor";
             this.GbColor.Size = new System.Drawing.Size(200, 110);
             this.GbColor.TabIndex = 6;
@@ -218,7 +219,7 @@ namespace SColorPicker
             this.panelGroup.Controls.Add(this.GbColor);
             this.panelGroup.Location = new System.Drawing.Point(0, 0);
             this.panelGroup.Name = "panelGroup";
-            this.panelGroup.Size = new System.Drawing.Size(404, 234);
+            this.panelGroup.Size = new System.Drawing.Size(404, 245);
             this.panelGroup.TabIndex = 7;
             // 
             // gBColorWheel
@@ -226,7 +227,7 @@ namespace SColorPicker
             this.gBColorWheel.BackColor = System.Drawing.SystemColors.Control;
             this.gBColorWheel.Location = new System.Drawing.Point(206, 0);
             this.gBColorWheel.Name = "gBColorWheel";
-            this.gBColorWheel.Size = new System.Drawing.Size(190, 226);
+            this.gBColorWheel.Size = new System.Drawing.Size(190, 233);
             this.gBColorWheel.TabIndex = 7;
             this.gBColorWheel.TabStop = false;
             this.gBColorWheel.Text = "[ Color Wheel ]";
@@ -255,6 +256,16 @@ namespace SColorPicker
             this.LabelTip.Text = "label4";
             this.LabelTip.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.LabelTip.MouseEnter += new System.EventHandler(this.MouseEnter_Capture);
+            // 
+            // TxtHex
+            // 
+            this.TxtHex.Location = new System.Drawing.Point(122, 87);
+            this.TxtHex.Name = "TxtHex";
+            this.TxtHex.ReadOnly = true;
+            this.TxtHex.Size = new System.Drawing.Size(64, 20);
+            this.TxtHex.TabIndex = 12;
+            this.TxtHex.Text = "#FFFFFF";
+            this.TxtHex.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // FrmMain
             // 
@@ -304,6 +315,7 @@ namespace SColorPicker
         private DomainUpDown TxtBScroll;
         private Panel panelTip;
         private Label LabelTip;
+        private TextBox TxtHex;
     }
 }
 

@@ -378,6 +378,7 @@ namespace SColorPicker
             int cB = int.Parse(this.TxtBScroll.Text.ToString());
             
             this.GbColor.BackColor = Color.FromArgb(cR, cG, cB);
+            this.TxtHex.Text = $"#{cR:X2}{cG:X2}{cB:X2}";
             SetSpan();
         }
 
@@ -510,7 +511,10 @@ namespace SColorPicker
             if (color.IsEmpty)
                 return;
 
-            Clipboard.SetText($"{color}");
+            string col = color.ToString().Replace("Color [", "").Replace("]", "");
+            col += $"{Environment.NewLine}{this.TxtHex.Text}";
+
+            Clipboard.SetText($"{col}");
         }
         private void TxtScoll_SelectedItemChanged(object sender, EventArgs e)
         {
