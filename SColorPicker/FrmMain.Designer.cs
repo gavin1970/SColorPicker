@@ -35,6 +35,7 @@ namespace SColorPicker
             this.timer = new System.Windows.Forms.Timer(this.components);
             this.BtnPick = new System.Windows.Forms.Button();
             this.GroupingBox = new System.Windows.Forms.GroupBox();
+            this.TxtHex = new System.Windows.Forms.TextBox();
             this.TxtBScroll = new System.Windows.Forms.DomainUpDown();
             this.TxtGScroll = new System.Windows.Forms.DomainUpDown();
             this.TxtRScoll = new System.Windows.Forms.DomainUpDown();
@@ -51,7 +52,7 @@ namespace SColorPicker
             this.gBColorWheel = new System.Windows.Forms.GroupBox();
             this.panelTip = new System.Windows.Forms.Panel();
             this.LabelTip = new System.Windows.Forms.Label();
-            this.TxtHex = new System.Windows.Forms.TextBox();
+            this.label4 = new System.Windows.Forms.Label();
             this.GroupingBox.SuspendLayout();
             this.GbColor.SuspendLayout();
             this.panel1.SuspendLayout();
@@ -76,6 +77,7 @@ namespace SColorPicker
             // GroupingBox
             // 
             this.GroupingBox.BackColor = System.Drawing.SystemColors.Control;
+            this.GroupingBox.Controls.Add(this.label4);
             this.GroupingBox.Controls.Add(this.TxtHex);
             this.GroupingBox.Controls.Add(this.TxtBScroll);
             this.GroupingBox.Controls.Add(this.TxtGScroll);
@@ -93,6 +95,16 @@ namespace SColorPicker
             this.GroupingBox.TabStop = false;
             this.GroupingBox.Text = "[ Pick Color ]";
             this.GroupingBox.MouseEnter += new System.EventHandler(this.MouseEnter_Capture);
+            // 
+            // TxtHex
+            // 
+            this.TxtHex.Location = new System.Drawing.Point(130, 87);
+            this.TxtHex.Name = "TxtHex";
+            this.TxtHex.ReadOnly = true;
+            this.TxtHex.Size = new System.Drawing.Size(56, 20);
+            this.TxtHex.TabIndex = 12;
+            this.TxtHex.Text = "#FFFFFF";
+            this.TxtHex.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // TxtBScroll
             // 
@@ -257,15 +269,14 @@ namespace SColorPicker
             this.LabelTip.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.LabelTip.MouseEnter += new System.EventHandler(this.MouseEnter_Capture);
             // 
-            // TxtHex
+            // label4
             // 
-            this.TxtHex.Location = new System.Drawing.Point(122, 87);
-            this.TxtHex.Name = "TxtHex";
-            this.TxtHex.ReadOnly = true;
-            this.TxtHex.Size = new System.Drawing.Size(64, 20);
-            this.TxtHex.TabIndex = 12;
-            this.TxtHex.Text = "#FFFFFF";
-            this.TxtHex.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(103, 91);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(29, 13);
+            this.label4.TabIndex = 13;
+            this.label4.Text = "Hex:";
             // 
             // FrmMain
             // 
@@ -316,6 +327,7 @@ namespace SColorPicker
         private Panel panelTip;
         private Label LabelTip;
         private TextBox TxtHex;
+        private Label label4;
     }
 }
 
