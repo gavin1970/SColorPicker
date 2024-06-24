@@ -93,6 +93,8 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="color_picker.ico" />
+    <Content Include="media\SColorPicker.mp4" />
+    <Content Include="media\SColorPicker.png" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

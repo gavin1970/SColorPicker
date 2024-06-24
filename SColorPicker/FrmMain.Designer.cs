@@ -244,7 +244,7 @@ namespace SColorPicker
             this.gBColorWheel.TabStop = false;
             this.gBColorWheel.Text = "[ Color Wheel ]";
             this.gBColorWheel.MouseUp += new System.Windows.Forms.MouseEventHandler(this.FrmMain_MouseUp);
-            this.gBColorWheel.Paint += new System.Windows.Forms.PaintEventHandler(this.gBColorWheel_Paint);
+            this.gBColorWheel.Paint += new System.Windows.Forms.PaintEventHandler(this.GBColorWheel_Paint);
             // 
             // panelTip
             // 

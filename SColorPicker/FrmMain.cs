@@ -86,8 +86,8 @@ namespace SColorPicker
         const int m_tipRotationWait = 10000;
         const int m_borderSize = 2;
         const double m_wheelLightness = 0.5;
-        List<PointF> m_path = new List<PointF>();
-        List<Color> m_colors = new List<Color>();
+        readonly List<PointF> m_path = new List<PointF>();
+        readonly List<Color> m_colors = new List<Color>();
 
         private PickerTip Tips { get; set; }
         private FrmLens ZoomLens { get; set; } = null;
@@ -211,8 +211,14 @@ namespace SColorPicker
                 Control[] bExists = this.Controls.Find($"bspan{i}", true);
                 if (tExists.Length == 0)
                 {
-                    Panel pu = new Panel() { Size = new Size(46, 20), Dock = DockStyle.Left, Name = $"tspan{i}", BackColor = cu[i] };
-                    pu.Cursor = Cursors.Hand;
+                    Panel pu = new Panel
+                    {
+                        Size = new Size(46, 20),
+                        Dock = DockStyle.Left,
+                        Name = $"tspan{i}",
+                        BackColor = cu[i],
+                        Cursor = Cursors.Hand
+                    };
                     pu.Click += SelectColorClicked;
                     panelSpanTop.Controls.Add(pu);
                 }
@@ -221,8 +227,14 @@ namespace SColorPicker
 
                 if (bExists.Length == 0)
                 {
-                    Panel pl = new Panel() { Size = new Size(46, 20), Dock = DockStyle.Left, Name = $"bspan{i}", BackColor = cl[i] };
-                    pl.Cursor = Cursors.Hand;
+                    Panel pl = new Panel
+                    {
+                        Size = new Size(46, 20),
+                        Dock = DockStyle.Left,
+                        Name = $"bspan{i}",
+                        BackColor = cl[i],
+                        Cursor = Cursors.Hand
+                    };
                     pl.Click += SelectColorClicked;
                     panelSpanBottom.Controls.Add(pl);
                 }
@@ -331,11 +343,13 @@ namespace SColorPicker
         }
         private Rectangle Rect(RectangleF rf)
         {
-            Rectangle r = new Rectangle();
-            r.X = (int)rf.X;
-            r.Y = (int)rf.Y;
-            r.Width = (int)rf.Width;
-            r.Height = (int)rf.Height;
+            Rectangle r = new Rectangle
+            {
+                X = (int)rf.X,
+                Y = (int)rf.Y,
+                Width = (int)rf.Width,
+                Height = (int)rf.Height
+            };
             return r;
         }
         private PointF Center(RectangleF r)
@@ -382,7 +396,7 @@ namespace SColorPicker
             SetSpan();
         }
 
-        private void gBColorWheel_Paint(object sender, PaintEventArgs e)
+        private void GBColorWheel_Paint(object sender, PaintEventArgs e)
         {
             RectangleF wheelrect = WheelRectangle;
             PointF center = Center(wheelrect);
