@@ -1,10 +1,11 @@
-﻿using ColorPicker;
-using SColorPicker.utils;
-using System;
-using System.Collections.Generic;
+﻿using System;
+using ColorPicker;
+using Chizl.Utils;
 using System.Drawing;
-using System.Drawing.Drawing2D;
+using SColorPicker.utils;
 using System.Windows.Forms;
+using System.Drawing.Drawing2D;
+using System.Collections.Generic;
 
 namespace SColorPicker
 {
@@ -362,6 +363,10 @@ namespace SColorPicker
             center.Y += r.Height / 2;
             return center;
         }
+        private void SetTitlebar()
+        {
+            this.Text = $"{AppInfo.Title} v{AppInfo.FileVersion}";
+        }
         private void SetTxtScrollTextColor(DomainUpDown dUpDown)
         {
             if(string.IsNullOrWhiteSpace(dUpDown.Text))
@@ -423,6 +428,7 @@ namespace SColorPicker
             CalcWheelPoints();
             SetupScollText();
             SetupTips();
+            SetTitlebar();
         }
         private void FrmMain_Closing(object sender, FormClosingEventArgs e)
         {

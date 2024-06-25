@@ -5,8 +5,8 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("SColorPicker")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyTitle("Screen Color Picker")]
+[assembly: AssemblyDescription("by chizl.com")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("chizl.com")]
 [assembly: AssemblyProduct("SColorPicker")]
@@ -33,7 +33,7 @@ using System.Runtime.InteropServices;
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
 [assembly: AssemblyVersion("4.6.0.0")]
-[assembly: AssemblyFileVersion("4.6.25.029")]
+[assembly: AssemblyFileVersion("4.6.25.130")]
 [assembly: AssemblyInformationalVersion("4.6.25.0")]
 [assembly: AssemblyKeyFileAttribute("")]
 [assembly: AssemblyDelaySignAttribute(false)]
