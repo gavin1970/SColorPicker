@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Windows.Forms;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.Menu;
 
 namespace SColorPicker
 {
@@ -158,16 +157,18 @@ namespace SColorPicker
         }
         private void SetPanelTip(int tipHeight)
         {
+            //while moving.
             this.panelTip.Visible = false;
-            int w = this.BackgroundImage == null ? this.panelGroup.Width : this.panelGroup.Width - 8;
+            //int w = this.BackgroundImage == null ? this.panelGroup.Width : this.panelGroup.Width - 8;
+            int w = this.panelGroup.Width;
 
-            Point loc = new Point(this.panelGroup.Left,
-                                    this.panelGroup.Top + (this.panelGroup.Height - 5));
+            Point loc = new Point(this.panelGroup.Left, this.panelGroup.Top + (this.panelGroup.Height - 5));
             Size sz = new Size(w, tipHeight);
 
             this.panelTip.Location = loc;
             this.panelTip.Size = sz;
 
+            //turn it back on
             this.panelTip.Visible = true;
         }
         private void StopFindColor()
@@ -189,6 +190,8 @@ namespace SColorPicker
                 this.Focus();
                 this.BtnPick.Enabled = true;
                 this.BtnCopy.Visible = true;
+
+                this.SetPanelTip(this.panelTip.Height);
             }
         }
         private void SetSpan()
@@ -536,7 +539,7 @@ namespace SColorPicker
             SetTxtScrollTextColor(domainUpDown);
         }
 
-        public Bitmap GetScreenCap(out Size sz)
+        public Image GetScreenCap(out Size sz)
         {
             sz = this.Size;
 
@@ -548,7 +551,7 @@ namespace SColorPicker
                 sz.Width += scr.Bounds.Width;
             }
 
-            Bitmap bmp = new Bitmap(sz.Width, sz.Height);
+            Image bmp = new Bitmap(sz.Width, sz.Height);
             Rectangle bounds = new Rectangle(0, 0, sz.Width, sz.Height);
 
             using (Graphics g = Graphics.FromImage(bmp))

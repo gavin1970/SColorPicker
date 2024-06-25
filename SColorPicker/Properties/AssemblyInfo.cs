@@ -10,8 +10,8 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("chizl.com")]
 [assembly: AssemblyProduct("SColorPicker")]
-[assembly: AssemblyCopyright("copyright (c) chizl.com 2024")]
-[assembly: AssemblyTrademark("")]
+[assembly: AssemblyCopyright("© 2024 chizl.com")]
+[assembly: AssemblyTrademark("chizl.com ™")]
 [assembly: AssemblyCulture("")]
 
 // Setting ComVisible to false makes the types in this assembly not visible
@@ -32,6 +32,8 @@ using System.Runtime.InteropServices;
 // You can specify all the values or you can default the Build and Revision Numbers
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("1.0.0.0")]
-[assembly: AssemblyFileVersion("1.0.1.13")]
-[assembly: AssemblyInformationalVersion("1.0.0.0")]
+[assembly: AssemblyVersion("4.6.0.0")]
+[assembly: AssemblyFileVersion("4.6.25.029")]
+[assembly: AssemblyInformationalVersion("4.6.25.0")]
+[assembly: AssemblyKeyFileAttribute("")]
+[assembly: AssemblyDelaySignAttribute(false)]

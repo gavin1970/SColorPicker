@@ -58,6 +58,7 @@
     <Compile Include="FrmMain.Designer.cs">
       <DependentUpon>FrmMain.cs</DependentUpon>
     </Compile>
+    <Compile Include="utils\Common.cs" />
     <Compile Include="utils\PickerTip.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -99,6 +100,8 @@
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PreBuildEvent>C:\Code\~VBS\setVersion.vbs "$(ProjectDir)"</PreBuildEvent>
+    <PreBuildEvent>if $(ConfigurationName) == Release (
+  C:\Code\~VBS\setVersionByDate.vbs "$(ProjectDir)" T
+)</PreBuildEvent>
   </PropertyGroup>
 </Project>

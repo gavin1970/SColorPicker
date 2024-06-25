@@ -4,7 +4,7 @@ using System.Drawing;
 namespace ColorPicker
 {
     // http://en.wikipedia.org/wiki/HSL_color_space
-    public class HSLColor// : IEquatable<HSLColor>
+    public class HSLColor
     {
 		double m_hue;
 		double m_saturation;
@@ -100,23 +100,20 @@ namespace ColorPicker
 		{
 			// convert to RGB according to
 			// "Conversion from HSL to RGB"
-
 			double r = m_lightness;
 			double g = m_lightness;
 			double b = m_lightness;
 			if (m_saturation == 0)
 				return Color.FromArgb(255, (int)(r*255), (int)(g*255), (int)(b*255));
 
-			double q = 0;
-			if (m_lightness < 0.5)
-				q = m_lightness * (1 + m_saturation);
-			else
-				q = m_lightness + m_saturation - (m_lightness * m_saturation);
+            double q = (m_lightness < 0.5) ? 
+					m_lightness * (1 + m_saturation) : 
+					m_lightness + m_saturation - (m_lightness * m_saturation);
 			double p = 2 * m_lightness - q;
-			double hk = m_hue / 360;
+            double hk = m_hue / 360;
 
-			// r,g,b colors
-			double[] tc = new double[3] { hk + (1d/3d), hk, hk-(1d/3d)};
+            // r,g,b colors
+            double[] tc = new double[3] { hk + (1d/3d), hk, hk-(1d/3d)};
 			double[] colors = new double[3] {0, 0, 0};
 
 			for (int color = 0; color < colors.Length; color++)

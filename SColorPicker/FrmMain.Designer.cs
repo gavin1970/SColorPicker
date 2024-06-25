@@ -35,6 +35,7 @@ namespace SColorPicker
             this.timer = new System.Windows.Forms.Timer(this.components);
             this.BtnPick = new System.Windows.Forms.Button();
             this.GroupingBox = new System.Windows.Forms.GroupBox();
+            this.label4 = new System.Windows.Forms.Label();
             this.TxtHex = new System.Windows.Forms.TextBox();
             this.TxtBScroll = new System.Windows.Forms.DomainUpDown();
             this.TxtGScroll = new System.Windows.Forms.DomainUpDown();
@@ -52,7 +53,6 @@ namespace SColorPicker
             this.gBColorWheel = new System.Windows.Forms.GroupBox();
             this.panelTip = new System.Windows.Forms.Panel();
             this.LabelTip = new System.Windows.Forms.Label();
-            this.label4 = new System.Windows.Forms.Label();
             this.GroupingBox.SuspendLayout();
             this.GbColor.SuspendLayout();
             this.panel1.SuspendLayout();
@@ -95,6 +95,15 @@ namespace SColorPicker
             this.GroupingBox.TabStop = false;
             this.GroupingBox.Text = "[ Pick Color ]";
             this.GroupingBox.MouseEnter += new System.EventHandler(this.MouseEnter_Capture);
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(103, 91);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(29, 13);
+            this.label4.TabIndex = 13;
+            this.label4.Text = "Hex:";
             // 
             // TxtHex
             // 
@@ -225,13 +234,13 @@ namespace SColorPicker
             // 
             // panelGroup
             // 
-            this.panelGroup.BackColor = System.Drawing.Color.Transparent;
+            this.panelGroup.BackColor = System.Drawing.Color.DarkGray;
             this.panelGroup.Controls.Add(this.gBColorWheel);
             this.panelGroup.Controls.Add(this.GroupingBox);
             this.panelGroup.Controls.Add(this.GbColor);
             this.panelGroup.Location = new System.Drawing.Point(0, 0);
             this.panelGroup.Name = "panelGroup";
-            this.panelGroup.Size = new System.Drawing.Size(404, 245);
+            this.panelGroup.Size = new System.Drawing.Size(396, 245);
             this.panelGroup.TabIndex = 7;
             // 
             // gBColorWheel
@@ -253,7 +262,7 @@ namespace SColorPicker
             this.panelTip.Location = new System.Drawing.Point(96, 294);
             this.panelTip.Name = "panelTip";
             this.panelTip.Padding = new System.Windows.Forms.Padding(4);
-            this.panelTip.Size = new System.Drawing.Size(233, 37);
+            this.panelTip.Size = new System.Drawing.Size(280, 37);
             this.panelTip.TabIndex = 8;
             // 
             // LabelTip
@@ -263,27 +272,18 @@ namespace SColorPicker
             this.LabelTip.Font = new System.Drawing.Font("Expo M", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
             this.LabelTip.Location = new System.Drawing.Point(4, 4);
             this.LabelTip.Name = "LabelTip";
-            this.LabelTip.Size = new System.Drawing.Size(225, 29);
+            this.LabelTip.Size = new System.Drawing.Size(272, 29);
             this.LabelTip.TabIndex = 0;
             this.LabelTip.Text = "label4";
             this.LabelTip.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.LabelTip.MouseEnter += new System.EventHandler(this.MouseEnter_Capture);
             // 
-            // label4
-            // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(103, 91);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(29, 13);
-            this.label4.TabIndex = 13;
-            this.label4.Text = "Hex:";
-            // 
             // FrmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.BackColor = System.Drawing.Color.DarkGray;
-            this.ClientSize = new System.Drawing.Size(651, 486);
+            this.BackColor = System.Drawing.Color.Black;
+            this.ClientSize = new System.Drawing.Size(504, 368);
             this.Controls.Add(this.panelTip);
             this.Controls.Add(this.panelGroup);
             this.DoubleBuffered = true;

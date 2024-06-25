@@ -7,22 +7,12 @@ using System.Windows.Forms;
 public class FrmLens : Form
 {
     public Color ColorPicked { get; set; } = Color.Transparent;
-    FrmMain formMain = new FrmMain();
+    readonly FrmMain formMain = new FrmMain();
     private readonly Timer timer;
-    private Bitmap scrBmp;
+    private Image scrBmp;
     private Graphics scrGrp;
     private bool mouseDown;
 
-    private void InitializeComponent()
-    {
-        this.SuspendLayout();
-        // 
-        // FrmLens
-        // 
-        this.ClientSize = new System.Drawing.Size(120, 23);
-        this.Name = "FrmLens";
-        this.ResumeLayout(false);
-    }
     public FrmLens() : base()
     {
         SetStyle(
@@ -30,6 +20,7 @@ public class FrmLens : Form
             ControlStyles.Opaque |
             ControlStyles.UserPaint |
             ControlStyles.AllPaintingInWmPaint, true);
+
         UpdateStyles();
 
         FormBorderStyle = FormBorderStyle.None;
