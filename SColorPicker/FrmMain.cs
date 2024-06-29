@@ -89,6 +89,7 @@ namespace SColorPicker
         readonly List<PointF> m_path = new List<PointF>();
         readonly List<Color> m_colors = new List<Color>();
 
+        private bool AllowResize { get; set; } = false;
         private PickerTip Tips { get; set; }
         private FrmLens ZoomLens { get; set; } = null;
         private Point CursorPosition { get; set; }
@@ -109,6 +110,7 @@ namespace SColorPicker
 
             DefaultFormSize = new Size(this.panelGroup.Width, this.panelGroup.Height + (titleHeight * 2));
             this.Size = DefaultFormSize;
+            this.MaximumSize = DefaultFormSize;
         }
 
         private void SetupTips()
@@ -177,10 +179,12 @@ namespace SColorPicker
             this.timer.Enabled = false;
             if (this.FormBorderStyle != FormBorderStyle.FixedToolWindow)
             {
+                this.AllowResize = false;
                 this.Hide();
                 this.FormBorderStyle = FormBorderStyle.FixedToolWindow;
                 this.Location = DefaultFormSetup.Location;
                 this.Size = DefaultFormSize;
+                this.MaximumSize = DefaultFormSize;
                 this.panelGroup.Top = 0;
 
                 this.BackgroundImage = null;
@@ -501,6 +505,9 @@ namespace SColorPicker
         }
         private void BtnPick_Click(object sender, EventArgs e)
         {
+            this.AllowResize = true;
+            this.MaximumSize = new Size(0, 0);
+
             this.BtnCopy.BackColor = SystemColors.Control;
             this.BtnCopy.ForeColor = Color.Black;
             this.BtnPick.Enabled = false;

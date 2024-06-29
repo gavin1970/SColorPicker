@@ -70,6 +70,7 @@ namespace SColorPicker
             this.BtnPick.Name = "BtnPick";
             this.BtnPick.Size = new System.Drawing.Size(56, 23);
             this.BtnPick.TabIndex = 0;
+            this.BtnPick.TabStop = false;
             this.BtnPick.Text = "&Pick";
             this.BtnPick.UseVisualStyleBackColor = true;
             this.BtnPick.Click += new System.EventHandler(this.BtnPick_Click);
@@ -112,6 +113,7 @@ namespace SColorPicker
             this.TxtHex.ReadOnly = true;
             this.TxtHex.Size = new System.Drawing.Size(56, 20);
             this.TxtHex.TabIndex = 12;
+            this.TxtHex.TabStop = false;
             this.TxtHex.Text = "#FFFFFF";
             this.TxtHex.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
@@ -120,7 +122,7 @@ namespace SColorPicker
             this.TxtBScroll.Location = new System.Drawing.Point(138, 61);
             this.TxtBScroll.Name = "TxtBScroll";
             this.TxtBScroll.Size = new System.Drawing.Size(48, 20);
-            this.TxtBScroll.TabIndex = 11;
+            this.TxtBScroll.TabIndex = 2;
             this.TxtBScroll.Text = "255";
             this.TxtBScroll.SelectedItemChanged += new System.EventHandler(this.TxtScoll_SelectedItemChanged);
             this.TxtBScroll.KeyUp += new System.Windows.Forms.KeyEventHandler(this.TxtScroll_KeyUp);
@@ -130,7 +132,7 @@ namespace SColorPicker
             this.TxtGScroll.Location = new System.Drawing.Point(138, 38);
             this.TxtGScroll.Name = "TxtGScroll";
             this.TxtGScroll.Size = new System.Drawing.Size(48, 20);
-            this.TxtGScroll.TabIndex = 10;
+            this.TxtGScroll.TabIndex = 1;
             this.TxtGScroll.Text = "255";
             this.TxtGScroll.SelectedItemChanged += new System.EventHandler(this.TxtScoll_SelectedItemChanged);
             this.TxtGScroll.KeyUp += new System.Windows.Forms.KeyEventHandler(this.TxtScroll_KeyUp);
@@ -177,7 +179,8 @@ namespace SColorPicker
             this.BtnCopy.Location = new System.Drawing.Point(6, 86);
             this.BtnCopy.Name = "BtnCopy";
             this.BtnCopy.Size = new System.Drawing.Size(56, 23);
-            this.BtnCopy.TabIndex = 6;
+            this.BtnCopy.TabIndex = 1;
+            this.BtnCopy.TabStop = false;
             this.BtnCopy.Text = "&Copy";
             this.BtnCopy.UseVisualStyleBackColor = true;
             this.BtnCopy.Click += new System.EventHandler(this.BtnCopy_Click);
