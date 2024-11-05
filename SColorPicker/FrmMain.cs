@@ -540,11 +540,11 @@ namespace SColorPicker
 
             if (color.IsEmpty)
                 return;
-
-            string col = color.ToString().Replace("Color [", "").Replace("]", "");
-            col += $"{Environment.NewLine}{this.TxtHex.Text}";
-
-            Clipboard.SetText($"{col}");
+            
+            //Color.ToString() returns: Color [A=255, R=255, G=255, B=255]
+            //RGB(30,30,30) | HEX(#1E1E1E)
+            var clr = $"RGB({color.R},{color.G},{color.B}) | HEX({this.TxtHex.Text})";
+            Clipboard.SetText(clr);
         }
         private void TxtScoll_SelectedItemChanged(object sender, EventArgs e)
         {
