@@ -1,11 +1,14 @@
-﻿using SColorPicker;
-using System;
+﻿using System;
+using SColorPicker;
 using System.Drawing;
-using System.Drawing.Drawing2D;
 using System.Windows.Forms;
+using System.Drawing.Drawing2D;
+using System.Collections.Generic;
 
 public class FrmLens : Form
 {
+    private bool ControlKeyPressed = false;
+    public List<Color> ColorPickedList { get; set; } = new List<Color>() {  };
     public Color ColorPicked { get; set; } = Color.Transparent;
     readonly FrmMain formMain = new FrmMain();
     private readonly Timer timer;
@@ -80,10 +83,15 @@ public class FrmLens : Form
     protected override void OnMouseDown(MouseEventArgs e)
     {
         base.OnMouseDown(e);
-        if (e.Button == MouseButtons.Right) 
+        if (e.Button == MouseButtons.Right)
             mouseDown = true;
         else if (e.Button == MouseButtons.Left)
-            ColorPicked = formMain.GetColorAt(Cursor.Position.X, Cursor.Position.Y);
+        {
+            var clr = formMain.GetColorAt(Cursor.Position.X, Cursor.Position.Y);
+            if (ControlKeyPressed)
+                ColorPickedList.Add(clr);   //append
+            ColorPicked = clr;              //always set the last
+        }
     }
     protected override void OnMouseMove(MouseEventArgs e)
     {
@@ -92,17 +100,29 @@ public class FrmLens : Form
     }
     protected override void OnMouseUp(MouseEventArgs e)
     {
-        if (mouseDown)
+        if (!ControlKeyPressed)
         {
-            mouseDown = false;
-            if (AutoClose) 
-                Dispose();
+            if (mouseDown)
+            {
+                mouseDown = false;
+
+                if (ColorPickedList.Count > 0)
+                    this.Close();
+                else if (AutoClose)
+                    Dispose();
+            }
+            else
+                this.Close();
         }
-        else
-            this.Close();
+
         base.OnMouseUp(e);
     }
     protected override void OnKeyUp(KeyEventArgs e)
+    {
+        ControlKeyPressed = e.Modifiers == Keys.Control;
+        base.OnKeyUp(e);
+    }
+    protected override void OnKeyDown(KeyEventArgs e)
     {
         Point loc = Cursor.Position;
         if (e.KeyCode == Keys.Right)
@@ -122,12 +142,25 @@ public class FrmLens : Form
             Cursor.Position = new Point(loc.X, loc.Y + 1);
         }
 
+        ControlKeyPressed = e.Modifiers == Keys.Control;
+
         if (e.KeyCode == Keys.Escape || e.KeyCode == Keys.Enter)
         {
             if (e.KeyCode == Keys.Enter)
-                ColorPicked = formMain.GetColorAt(Cursor.Position.X, Cursor.Position.Y);
-            if (AutoClose) 
-                Dispose();
+            {
+                var clr = formMain.GetColorAt(Cursor.Position.X, Cursor.Position.Y);
+                if (ControlKeyPressed)
+                    ColorPickedList.Add(clr);   //append
+                ColorPicked = clr;              //always set the last
+            }
+
+            if (!ControlKeyPressed)
+            {
+                if (ColorPickedList.Count > 0)
+                    this.Close();
+                else if (AutoClose)
+                    Dispose();
+            }
         }
 
         base.OnKeyDown(e);
@@ -165,5 +198,23 @@ public class FrmLens : Form
             scrGrp?.Dispose();
         }
         base.Dispose(disposing);
+    }
+
+    private void InitializeComponent()
+    {
+            this.SuspendLayout();
+            // 
+            // FrmLens
+            // 
+            this.ClientSize = new Size(284, 261);
+            this.Name = "FrmLens";
+            this.Load += new EventHandler(this.FrmLens_Load);
+            this.ResumeLayout(false);
+
+    }
+
+    private void FrmLens_Load(object sender, EventArgs e)
+    {
+
     }
 }

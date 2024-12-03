@@ -307,7 +307,6 @@ namespace SColorPicker
             this.ResumeLayout(false);
 
         }
-
         #endregion
 
         private System.Windows.Forms.Timer timer;

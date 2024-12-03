@@ -6,6 +6,8 @@ using SColorPicker.utils;
 using System.Windows.Forms;
 using System.Drawing.Drawing2D;
 using System.Collections.Generic;
+using System.Text;
+using System.ComponentModel;
 
 namespace SColorPicker
 {
@@ -88,7 +90,10 @@ namespace SColorPicker
         const double m_wheelLightness = 0.5;
         readonly List<PointF> m_path = new List<PointF>();
         readonly List<Color> m_colors = new List<Color>();
+        private List<Color> m_colorPickList = new List<Color>();
 
+
+        private static bool ControlKeyPressed { get; set; } = false;
         private bool AllowResize { get; set; } = false;
         private PickerTip Tips { get; set; }
         private FrmLens ZoomLens { get; set; } = null;
@@ -111,6 +116,21 @@ namespace SColorPicker
             DefaultFormSize = new Size(this.panelGroup.Width, this.panelGroup.Height + (titleHeight * 2));
             this.Size = DefaultFormSize;
             this.MaximumSize = DefaultFormSize;
+            AddControlUpDown(this);
+        }
+        private void AddControlUpDown(Control control)
+        {
+            foreach (Control cont in control.Controls)
+            {
+                if (cont.Controls.Count > 0)
+                    AddControlUpDown(cont);
+
+                //this.KeyDown += new KeyEventHandler(this.Control_KeyDown);
+                //this.KeyUp += new KeyEventHandler(this.Control_KeyUp);
+
+                cont.KeyDown += Control_KeyDown;
+                cont.KeyUp += Control_KeyDown;
+            }
         }
 
         private void SetupTips()
@@ -197,6 +217,7 @@ namespace SColorPicker
                 this.BtnCopy.Visible = true;
 
                 this.SetPanelTip(this.panelTip.Height);
+                m_colorPickList.Add(this.GbColor.BackColor);
             }
         }
         private void SetSpan()
@@ -442,7 +463,9 @@ namespace SColorPicker
         }
         private void FrmMain_MouseUp(object sender, MouseEventArgs e)
         {
-            if (e.Button == MouseButtons.Left)
+            if (e.Button == MouseButtons.Left && ControlKeyPressed)
+                m_colorPickList.Add(GetColorAt(CursorPosition.X, CursorPosition.Y));
+            else if (e.Button == MouseButtons.Left) 
                 StopFindColor();
             else
             {
@@ -456,10 +479,19 @@ namespace SColorPicker
                         NearestNeighborInterpolation = false
                     };
                     ZoomLens.ShowDialog(this);
-                    if (ZoomLens != null && ZoomLens.ColorPicked != Color.Transparent)
+                    if (ZoomLens != null && (ZoomLens.ColorPicked != Color.Transparent || !ZoomLens.ColorPickedList.Count.Equals(0)))
                     {
                         StopFindColor();
                         this.GbColor.BackColor = ZoomLens.ColorPicked;
+
+                        if (ZoomLens.ColorPickedList.Count > 0)
+                        {
+                            m_colorPickList = ZoomLens.ColorPickedList;
+                            m_colorPickList.Add(this.GbColor.BackColor);
+                        }
+                        else
+                            m_colorPickList = new List<Color>() { };
+
                         ZoomLens?.Dispose();
 
                         this.TxtRScoll.Text = this.GbColor.BackColor.R.ToString();
@@ -508,6 +540,8 @@ namespace SColorPicker
             this.AllowResize = true;
             this.MaximumSize = new Size(0, 0);
 
+            this.m_colorPickList.Clear();
+
             this.BtnCopy.BackColor = SystemColors.Control;
             this.BtnCopy.ForeColor = Color.Black;
             this.BtnPick.Enabled = false;
@@ -538,18 +572,42 @@ namespace SColorPicker
             Color color = GetFormatColor();
             this.TxtRScoll.Focus();
 
-            if (color.IsEmpty)
+            if (color.IsEmpty && m_colorPickList.Count.Equals(0))
                 return;
-            
+
             //Color.ToString() returns: Color [A=255, R=255, G=255, B=255]
             //RGB(30,30,30) | HEX(#1E1E1E)
-            var clr = $"RGB({color.R},{color.G},{color.B}) | HEX({this.TxtHex.Text})";
+
+            var clr = "";
+            if (m_colorPickList.Count > 0)
+            {
+                var sb = new StringBuilder();
+                foreach (Color clrPick in m_colorPickList)
+                {
+                    //this.GbColor.BackColor = Color.FromArgb(cR, cG, cB);
+                    var hex = $"HEX({clrPick.R:X2}{clrPick.G:X2}{clrPick.B:X2})";
+                    var rgb = $"RGB({clrPick.R},{clrPick.G},{clrPick.B})";
+                    sb.AppendLine($"{rgb} | {hex}");
+                }
+                clr = sb.ToString();
+            }
+            else
+                clr = $"RGB({color.R},{color.G},{color.B}) | HEX({this.TxtHex.Text})";
+
             Clipboard.SetText(clr);
         }
         private void TxtScoll_SelectedItemChanged(object sender, EventArgs e)
         {
             DomainUpDown domainUpDown = (DomainUpDown)sender;
             SetTxtScrollTextColor(domainUpDown);
+        }
+        private void Control_KeyDown(object sender, KeyEventArgs e)
+        {
+            ControlKeyPressed = e.Modifiers == Keys.Control;
+        }
+        private void Control_KeyUp(object sender, KeyEventArgs e)
+        {
+            ControlKeyPressed = e.Modifiers == Keys.Control;
         }
 
         public Image GetScreenCap(out Size sz)
