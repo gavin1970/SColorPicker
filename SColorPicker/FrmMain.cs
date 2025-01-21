@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text;
 using ColorPicker;
 using Chizl.Utils;
 using System.Drawing;
@@ -6,8 +7,6 @@ using SColorPicker.utils;
 using System.Windows.Forms;
 using System.Drawing.Drawing2D;
 using System.Collections.Generic;
-using System.Text;
-using System.ComponentModel;
 
 namespace SColorPicker
 {
@@ -172,7 +171,7 @@ namespace SColorPicker
 
             this.GbColor.BackColor = GetColorAt(CursorPosition.X, CursorPosition.Y);
 
-            this.TxtRScoll.Text = this.GbColor.BackColor.R.ToString();
+            this.TxtRScroll.Text = this.GbColor.BackColor.R.ToString();
             this.TxtGScroll.Text = this.GbColor.BackColor.G.ToString();
             this.TxtBScroll.Text = this.GbColor.BackColor.B.ToString();
 
@@ -273,7 +272,7 @@ namespace SColorPicker
         }
         private Color GetFormatColor()
         {
-            if (!int.TryParse(this.TxtRScoll.Text.ToString(), out int r))
+            if (!int.TryParse(this.TxtRScroll.Text.ToString(), out int r))
                 return Color.Empty;
             if (!int.TryParse(this.TxtGScroll.Text.ToString(), out int g))
                 return Color.Empty;
@@ -300,12 +299,12 @@ namespace SColorPicker
         {
             for(int i=255; i>=0; i--)
             {
-                this.TxtRScoll.Items.Add(i.ToString());
+                this.TxtRScroll.Items.Add(i.ToString());
                 this.TxtGScroll.Items.Add(i.ToString());
                 this.TxtBScroll.Items.Add(i.ToString());
             }
 
-            this.TxtRScoll.SelectedIndex = 0;
+            this.TxtRScroll.SelectedIndex = 0;
             this.TxtGScroll.SelectedIndex = 0;
             this.TxtBScroll.SelectedIndex = 0;
         }
@@ -420,12 +419,14 @@ namespace SColorPicker
                 fg = Color.White;
             dUpDown.ForeColor = fg;
 
-            int cR = int.Parse(this.TxtRScoll.Text.ToString());
+            int cR = int.Parse(this.TxtRScroll.Text.ToString());
             int cG = int.Parse(this.TxtGScroll.Text.ToString());
             int cB = int.Parse(this.TxtBScroll.Text.ToString());
             
             this.GbColor.BackColor = Color.FromArgb(cR, cG, cB);
-            this.TxtHex.Text = $"#{cR:X2}{cG:X2}{cB:X2}";
+            var hex = $"{cR:X2}{cG:X2}{cB:X2}";
+            var dec = int.Parse(hex, System.Globalization.NumberStyles.HexNumber);
+            this.TxtHex.Text = $"#{hex} ({dec})";
             SetSpan();
         }
 
@@ -494,7 +495,7 @@ namespace SColorPicker
 
                         ZoomLens?.Dispose();
 
-                        this.TxtRScoll.Text = this.GbColor.BackColor.R.ToString();
+                        this.TxtRScroll.Text = this.GbColor.BackColor.R.ToString();
                         this.TxtGScroll.Text = this.GbColor.BackColor.G.ToString();
                         this.TxtBScroll.Text = this.GbColor.BackColor.B.ToString();
 
@@ -561,16 +562,17 @@ namespace SColorPicker
             this.timer.Enabled = true;
             this.BringToFront();
             this.Focus();
-            this.TxtRScoll.Focus();
+            this.TxtRScroll.Focus();
         }
         private void BtnCopy_Click(object sender, EventArgs e)
         {
+            var template = $"RGB[{0}] | HEX[#{1}] | HEXDEC[0x{1}] | DEC[{2}]";
             this.BtnCopy.BackColor = Color.Green;
             this.BtnCopy.ForeColor = Color.White;
             Clipboard.Clear();
 
             Color color = GetFormatColor();
-            this.TxtRScoll.Focus();
+            this.TxtRScroll.Focus();
 
             if (color.IsEmpty && m_colorPickList.Count.Equals(0))
                 return;
@@ -578,21 +580,24 @@ namespace SColorPicker
             //Color.ToString() returns: Color [A=255, R=255, G=255, B=255]
             //RGB(30,30,30) | HEX(#1E1E1E)
 
-            var clr = "";
+            var rgb = $"{color.R},{color.G},{color.B}";
+            var hex = $"{color.R:X2},{color.G:X2},{color.B}:X2";
+            var dec = int.Parse(hex, System.Globalization.NumberStyles.HexNumber);
+            var clr = string.Format(template, rgb, hex, dec);   //default
+
             if (m_colorPickList.Count > 0)
             {
                 var sb = new StringBuilder();
                 foreach (Color clrPick in m_colorPickList)
                 {
-                    //this.GbColor.BackColor = Color.FromArgb(cR, cG, cB);
-                    var hex = $"HEX({clrPick.R:X2}{clrPick.G:X2}{clrPick.B:X2})";
-                    var rgb = $"RGB({clrPick.R},{clrPick.G},{clrPick.B})";
-                    sb.AppendLine($"{rgb} | {hex}");
+                    hex = $"{clrPick.R:X2}{clrPick.G:X2}{clrPick.B:X2}";
+                    rgb = $"{clrPick.R},{clrPick.G},{clrPick.B}";
+                    dec = int.Parse(hex, System.Globalization.NumberStyles.HexNumber);
+                    sb.AppendLine(string.Format(template, rgb, hex, dec));
                 }
+
                 clr = sb.ToString();
             }
-            else
-                clr = $"RGB({color.R},{color.G},{color.B}) | HEX({this.TxtHex.Text})";
 
             Clipboard.SetText(clr);
         }
@@ -638,6 +643,38 @@ namespace SColorPicker
                 g.CopyFromScreen(bounds.Location, Point.Empty, bounds.Size);
 
             return bmp.GetPixel(0, 0);
+        }
+
+        private void TxtHex_KeyUp(object sender, KeyEventArgs e)
+        {
+            var hex = TxtHex.Text.Trim().ToUpper();
+            if (hex.IndexOf(' ') > 6)
+            {
+                hex = hex.Substring(0, hex.IndexOf(' ')).Trim();
+                TxtHex.Text = hex.Replace(" ", "");
+            }
+
+            if (e.KeyCode == Keys.Enter)
+            {
+                if (!Common.CleanHexColorString(hex, out string newHex))
+                {
+                    MessageBox.Show(newHex, "Invalid HEX", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+                else
+                    hex = newHex;
+
+                var dec = int.Parse(hex, System.Globalization.NumberStyles.HexNumber);
+                var clr = Color.FromArgb(dec);
+                hex = $"#{hex} ({dec})";
+
+                TxtRScroll.Text = clr.R.ToString();
+                TxtGScroll.Text = clr.G.ToString();
+                TxtBScroll.Text = clr.B.ToString();
+                SetSpan();
+            }
+
+            TxtHex.Text = hex;
         }
     }
 }

@@ -39,7 +39,7 @@ namespace SColorPicker
             this.TxtHex = new System.Windows.Forms.TextBox();
             this.TxtBScroll = new System.Windows.Forms.DomainUpDown();
             this.TxtGScroll = new System.Windows.Forms.DomainUpDown();
-            this.TxtRScoll = new System.Windows.Forms.DomainUpDown();
+            this.TxtRScroll = new System.Windows.Forms.DomainUpDown();
             this.label3 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
@@ -82,7 +82,7 @@ namespace SColorPicker
             this.GroupingBox.Controls.Add(this.TxtHex);
             this.GroupingBox.Controls.Add(this.TxtBScroll);
             this.GroupingBox.Controls.Add(this.TxtGScroll);
-            this.GroupingBox.Controls.Add(this.TxtRScoll);
+            this.GroupingBox.Controls.Add(this.TxtRScroll);
             this.GroupingBox.Controls.Add(this.label3);
             this.GroupingBox.Controls.Add(this.label2);
             this.GroupingBox.Controls.Add(this.label1);
@@ -100,7 +100,7 @@ namespace SColorPicker
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(103, 91);
+            this.label4.Location = new System.Drawing.Point(68, 78);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(29, 13);
             this.label4.TabIndex = 13;
@@ -108,14 +108,14 @@ namespace SColorPicker
             // 
             // TxtHex
             // 
-            this.TxtHex.Location = new System.Drawing.Point(130, 87);
+            this.TxtHex.Location = new System.Drawing.Point(63, 89);
             this.TxtHex.Name = "TxtHex";
-            this.TxtHex.ReadOnly = true;
-            this.TxtHex.Size = new System.Drawing.Size(56, 20);
+            this.TxtHex.Size = new System.Drawing.Size(120, 20);
             this.TxtHex.TabIndex = 12;
             this.TxtHex.TabStop = false;
-            this.TxtHex.Text = "#FFFFFF";
+            this.TxtHex.Text = "#FFFFFF (16777215)";
             this.TxtHex.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.TxtHex.KeyUp += new System.Windows.Forms.KeyEventHandler(this.TxtHex_KeyUp);
             // 
             // TxtBScroll
             // 
@@ -137,15 +137,15 @@ namespace SColorPicker
             this.TxtGScroll.SelectedItemChanged += new System.EventHandler(this.TxtScoll_SelectedItemChanged);
             this.TxtGScroll.KeyUp += new System.Windows.Forms.KeyEventHandler(this.TxtScroll_KeyUp);
             // 
-            // TxtRScoll
+            // TxtRScroll
             // 
-            this.TxtRScoll.Location = new System.Drawing.Point(138, 15);
-            this.TxtRScoll.Name = "TxtRScoll";
-            this.TxtRScoll.Size = new System.Drawing.Size(48, 20);
-            this.TxtRScoll.TabIndex = 0;
-            this.TxtRScoll.Text = "255";
-            this.TxtRScoll.SelectedItemChanged += new System.EventHandler(this.TxtScoll_SelectedItemChanged);
-            this.TxtRScoll.KeyUp += new System.Windows.Forms.KeyEventHandler(this.TxtScroll_KeyUp);
+            this.TxtRScroll.Location = new System.Drawing.Point(138, 15);
+            this.TxtRScroll.Name = "TxtRScroll";
+            this.TxtRScroll.Size = new System.Drawing.Size(48, 20);
+            this.TxtRScroll.TabIndex = 0;
+            this.TxtRScroll.Text = "255";
+            this.TxtRScroll.SelectedItemChanged += new System.EventHandler(this.TxtScoll_SelectedItemChanged);
+            this.TxtRScroll.KeyUp += new System.Windows.Forms.KeyEventHandler(this.TxtScroll_KeyUp);
             // 
             // label3
             // 
@@ -323,7 +323,7 @@ namespace SColorPicker
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label1;
-        private DomainUpDown TxtRScoll;
+        private DomainUpDown TxtRScroll;
         private DomainUpDown TxtGScroll;
         private DomainUpDown TxtBScroll;
         private Panel panelTip;

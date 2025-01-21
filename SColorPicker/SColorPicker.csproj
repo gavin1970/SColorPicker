@@ -60,6 +60,7 @@
       <DependentUpon>FrmMain.cs</DependentUpon>
     </Compile>
     <Compile Include="utils\AppInfo.cs" />
+    <Compile Include="utils\Common.cs" />
     <Compile Include="utils\PickerTip.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -10,7 +10,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("chizl.com")]
 [assembly: AssemblyProduct("SColorPicker")]
-[assembly: AssemblyCopyright("© 2024 chizl.com")]
+[assembly: AssemblyCopyright("© 2025 chizl.com")]
 [assembly: AssemblyTrademark("chizl.com ™")]
 [assembly: AssemblyCulture("")]
 
@@ -32,8 +32,8 @@ using System.Runtime.InteropServices;
 // You can specify all the values or you can default the Build and Revision Numbers
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("4.12.0.0")]
-[assembly: AssemblyFileVersion("4.12.3.1044")]
-[assembly: AssemblyInformationalVersion("4.12.3.0")]
+[assembly: AssemblyVersion("5.1.0.0")]
+[assembly: AssemblyFileVersion("5.1.21.14")]
+[assembly: AssemblyInformationalVersion("5.1.21.0")]
 [assembly: AssemblyKeyFileAttribute("")]
 [assembly: AssemblyDelaySignAttribute(false)]
