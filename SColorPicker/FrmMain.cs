@@ -566,7 +566,7 @@ namespace SColorPicker
         }
         private void BtnCopy_Click(object sender, EventArgs e)
         {
-            var template = $"RGB[{0}] | HEX[#{1}] | HEXDEC[0x{1}] | DEC[{2}]";
+            var template = "RGB[{0}] | HEX[#{1}] | HEXDEC[0x{1}] | DEC[{2}]";
             this.BtnCopy.BackColor = Color.Green;
             this.BtnCopy.ForeColor = Color.White;
             Clipboard.Clear();
@@ -581,7 +581,7 @@ namespace SColorPicker
             //RGB(30,30,30) | HEX(#1E1E1E)
 
             var rgb = $"{color.R},{color.G},{color.B}";
-            var hex = $"{color.R:X2},{color.G:X2},{color.B}:X2";
+            var hex = $"{color.R:X2}{color.G:X2}{color.B:X2}";
             var dec = int.Parse(hex, System.Globalization.NumberStyles.HexNumber);
             var clr = string.Format(template, rgb, hex, dec);   //default
 
