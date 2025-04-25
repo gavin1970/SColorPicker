@@ -91,7 +91,6 @@ namespace SColorPicker
         readonly List<Color> m_colors = new List<Color>();
         private List<Color> m_colorPickList = new List<Color>();
 
-
         private static bool ControlKeyPressed { get; set; } = false;
         private bool AllowResize { get; set; } = false;
         private PickerTip Tips { get; set; }
@@ -217,6 +216,7 @@ namespace SColorPicker
 
                 this.SetPanelTip(this.panelTip.Height);
                 m_colorPickList.Add(this.GbColor.BackColor);
+                SetColorName($"{this.GbColor.BackColor.R:X2}{this.GbColor.BackColor.G:X2}{this.GbColor.BackColor.B:X2}");
             }
         }
         private void SetSpan()
@@ -427,9 +427,17 @@ namespace SColorPicker
             var hex = $"{cR:X2}{cG:X2}{cB:X2}";
             var dec = int.Parse(hex, System.Globalization.NumberStyles.HexNumber);
             this.TxtHex.Text = $"#{hex} ({dec})";
+
             SetSpan();
         }
-
+        private void SetColorName(string hex)
+        {
+            var colorName = ColorName.GetColorName(hex);
+            if (!string.IsNullOrWhiteSpace(colorName))
+                this.Text = $"{AppInfo.Title} - {colorName}";
+            else
+                SetTitlebar();
+        }
         private void GBColorWheel_Paint(object sender, PaintEventArgs e)
         {
             RectangleF wheelrect = WheelRectangle;
@@ -466,7 +474,7 @@ namespace SColorPicker
         {
             if (e.Button == MouseButtons.Left && ControlKeyPressed)
                 m_colorPickList.Add(GetColorAt(CursorPosition.X, CursorPosition.Y));
-            else if (e.Button == MouseButtons.Left) 
+            else if (e.Button == MouseButtons.Left)
                 StopFindColor();
             else
             {
@@ -663,6 +671,8 @@ namespace SColorPicker
                 }
                 else
                     hex = newHex;
+
+                SetColorName(hex);
 
                 var dec = int.Parse(hex, System.Globalization.NumberStyles.HexNumber);
                 var clr = Color.FromArgb(dec);
