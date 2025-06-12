@@ -123,14 +123,14 @@ namespace ColorPicker
 				if (tc[color] > 1)
 					tc[color] -= 1;
 
-				if (tc[color] < (1d/6d))
-					colors[color] = p + ((q-p)*6*tc[color]);
+				if (tc[color] < (1d / 6d))
+					colors[color] = Math.Abs(p + ((q - p) * 6 * tc[color]));
 				else
-				if (tc[color] >= (1d/6d) && tc[color] < (1d/2d))
+				if (tc[color] >= (1d / 6d) && tc[color] < (1d / 2d))
 					colors[color] = q;
 				else
-				if (tc[color] >= (1d/2d) && tc[color] < (2d/3d))
-					colors[color] = p + ((q-p)*6*(2d/3d - tc[color]));
+				if (tc[color] >= (1d / 2d) && tc[color] < (2d / 3d))
+					colors[color] = Math.Abs(p + ((q - p) * 6 * (2d / 3d - tc[color])));
 				else
 					colors[color] = p;
 
@@ -140,7 +140,7 @@ namespace ColorPicker
 		}
         public override string ToString()
         {
-            string s = string.Format("HSL({0:f2}, {1:f2}, {2:f2})", Hue, Saturation, Lightness);
+            string s = string.Format("HSL({0:f2}, {1:f2}, {2:f2})", Hue, Math.Round(Saturation*100,2), Math.Round(Lightness * 100, 2));
             return s;
         }
     }

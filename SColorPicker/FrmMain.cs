@@ -7,6 +7,7 @@ using SColorPicker.utils;
 using System.Windows.Forms;
 using System.Drawing.Drawing2D;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace SColorPicker
 {
@@ -316,15 +317,18 @@ namespace SColorPicker
             PointF center = Center(ColorWheelRectangle);
             float radius = Radius(ColorWheelRectangle);
             double angle = 0;
+            double buffer = -270;
             double fullcircle = 360;
             double step = 5;
             while (angle < fullcircle)
             {
-                double angleR = angle * (Math.PI / 180);
+                double angleR = angle * (Math.PI / -180);
+                //var nRad = radius - 90;
                 double x = center.X + Math.Cos(angleR) * radius;
                 double y = center.Y - Math.Sin(angleR) * radius;
                 m_path.Add(new PointF((float)x, (float)y));
-                m_colors.Add(new HSLColor(angle, 1, m_wheelLightness).Color);
+                m_colors.Add(new HSLColor((angle + buffer), 1, m_wheelLightness).Color);
+                //m_colors.Add(Color.FromArgb(angle, 1, m_wheelLightness).Color);
                 angle += step;
             }
         }
@@ -423,10 +427,12 @@ namespace SColorPicker
             int cG = int.Parse(this.TxtGScroll.Text.ToString());
             int cB = int.Parse(this.TxtBScroll.Text.ToString());
             
-            this.GbColor.BackColor = Color.FromArgb(cR, cG, cB);
+            var clr = Color.FromArgb(cR, cG, cB);
+            this.GbColor.BackColor = clr;
             var hex = $"{cR:X2}{cG:X2}{cB:X2}";
             var dec = int.Parse(hex, System.Globalization.NumberStyles.HexNumber);
             this.TxtHex.Text = $"#{hex} ({dec})";
+            this.LabelHSL.Text = new HSLColor(clr).ToString();
 
             SetSpan();
         }
