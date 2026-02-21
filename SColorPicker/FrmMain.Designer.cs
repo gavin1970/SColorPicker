@@ -51,17 +51,17 @@ namespace SColorPicker
             this.panelSpanTop = new System.Windows.Forms.Panel();
             this.panelGroup = new System.Windows.Forms.Panel();
             this.gBColorWheel = new System.Windows.Forms.GroupBox();
+            this.panel2 = new System.Windows.Forms.Panel();
+            this.LabelHSL = new System.Windows.Forms.Label();
             this.panelTip = new System.Windows.Forms.Panel();
             this.LabelTip = new System.Windows.Forms.Label();
-            this.LabelHSL = new System.Windows.Forms.Label();
-            this.panel2 = new System.Windows.Forms.Panel();
             this.GroupingBox.SuspendLayout();
             this.GbColor.SuspendLayout();
             this.panel1.SuspendLayout();
             this.panelGroup.SuspendLayout();
             this.gBColorWheel.SuspendLayout();
-            this.panelTip.SuspendLayout();
             this.panel2.SuspendLayout();
+            this.panelTip.SuspendLayout();
             this.SuspendLayout();
             // 
             // timer
@@ -263,6 +263,25 @@ namespace SColorPicker
             this.gBColorWheel.MouseUp += new System.Windows.Forms.MouseEventHandler(this.FrmMain_MouseUp);
             this.gBColorWheel.Paint += new System.Windows.Forms.PaintEventHandler(this.GBColorWheel_Paint);
             // 
+            // panel2
+            // 
+            this.panel2.Controls.Add(this.LabelHSL);
+            this.panel2.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.panel2.Location = new System.Drawing.Point(3, 205);
+            this.panel2.Name = "panel2";
+            this.panel2.Padding = new System.Windows.Forms.Padding(5);
+            this.panel2.Size = new System.Drawing.Size(184, 25);
+            this.panel2.TabIndex = 1;
+            // 
+            // LabelHSL
+            // 
+            this.LabelHSL.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.LabelHSL.Location = new System.Drawing.Point(5, 5);
+            this.LabelHSL.Name = "LabelHSL";
+            this.LabelHSL.Size = new System.Drawing.Size(174, 15);
+            this.LabelHSL.TabIndex = 0;
+            this.LabelHSL.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
             // panelTip
             // 
             this.panelTip.BackColor = System.Drawing.Color.Black;
@@ -285,25 +304,6 @@ namespace SColorPicker
             this.LabelTip.Text = "label4";
             this.LabelTip.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.LabelTip.MouseEnter += new System.EventHandler(this.MouseEnter_Capture);
-            // 
-            // LabelHSL
-            // 
-            this.LabelHSL.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.LabelHSL.Location = new System.Drawing.Point(5, 5);
-            this.LabelHSL.Name = "LabelHSL";
-            this.LabelHSL.Size = new System.Drawing.Size(174, 15);
-            this.LabelHSL.TabIndex = 0;
-            this.LabelHSL.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // panel2
-            // 
-            this.panel2.Controls.Add(this.LabelHSL);
-            this.panel2.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panel2.Location = new System.Drawing.Point(3, 205);
-            this.panel2.Name = "panel2";
-            this.panel2.Padding = new System.Windows.Forms.Padding(5);
-            this.panel2.Size = new System.Drawing.Size(184, 25);
-            this.panel2.TabIndex = 1;
             // 
             // FrmMain
             // 
@@ -328,8 +328,8 @@ namespace SColorPicker
             this.panel1.ResumeLayout(false);
             this.panelGroup.ResumeLayout(false);
             this.gBColorWheel.ResumeLayout(false);
-            this.panelTip.ResumeLayout(false);
             this.panel2.ResumeLayout(false);
+            this.panelTip.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
